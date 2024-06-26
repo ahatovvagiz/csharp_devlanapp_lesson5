@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Client
 {
-    class Client
+    public class Client
     {
         public static void SentMessage(string From, string ip)
         {
@@ -20,7 +20,7 @@ namespace Client
                     // Console.Clear();
                     Console.WriteLine("Введите сообщение (для выхода введите \"Exit\", для получения списка непрочитанных сообщений \"Get\"): ");
                     messageText = Console.ReadLine();
-                     
+
                     if (messageText.ToLower() == "exit")
                     {
                         Console.WriteLine("Завершение работы клиента.");
