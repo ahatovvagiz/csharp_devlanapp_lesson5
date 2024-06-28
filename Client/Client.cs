@@ -1,8 +1,8 @@
-﻿using Server;
-using System.Net.Sockets;
+﻿using System.Net.Sockets;
 using System.Net;
 using System.Text;
 using Server.Services;
+using Server.Models;
 
 namespace Client
 {
