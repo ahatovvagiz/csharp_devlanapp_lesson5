@@ -7,7 +7,7 @@ namespace Client
 {
     public class Client
     {
-        public static void SentMessage(string From, string ip)
+        public static void SendMessage(string From, string ip)
         {
             UdpClient udpClient = new UdpClient();
             IPEndPoint ipEndPoint = new IPEndPoint(IPAddress.Parse(ip), 12345);
@@ -52,7 +52,7 @@ namespace Client
                     }
                 }
                 while (string.IsNullOrEmpty(messageText));
-                NetMessage message = new NetMessage() { Text = messageText, DateTime = DateTime.Now };
+                NetMessage message = new NetMessage() { Text = messageText, DateTime = DateTime.Now, SenderFullName = From };
                 string json = message.SerializeMessageToJson();
 
                 byte[] data = Encoding.UTF8.GetBytes(json);
