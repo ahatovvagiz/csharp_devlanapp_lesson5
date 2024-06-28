@@ -16,8 +16,8 @@ namespace Server
         public bool IsRead { get; set; }
         public string? Text { get; set; }
         public DateTime DateTime { get; set; }
-        public int? SenderFullName { get; set; }
-        public int? ReceiverFullName { get; set; }
+        public string? SenderFullName { get; set; }
+        public string? ReceiverFullName { get; set; }
 
         public Command Command { get; set; }
         public string SerializeMessageToJson()

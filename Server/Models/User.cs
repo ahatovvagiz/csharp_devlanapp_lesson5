@@ -1,4 +1,4 @@
-﻿namespace Server
+﻿namespace Server.Models
 {
     public class User
     {
@@ -7,7 +7,7 @@
 
         }
         public User(string fullname)
-        { 
+        {
             FullName = fullname;
         }
         public virtual List<Message>? MessagesSend { get; set; } = new List<Message>();

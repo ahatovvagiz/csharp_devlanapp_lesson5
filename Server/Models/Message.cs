@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 
 // Определение модели сообщения
-namespace Server
+namespace Server.Models
 {
     public class Message
     {
@@ -16,7 +16,7 @@ namespace Server
         public virtual User Receiver { get; set; }
         public override string ToString()
         {
-            return $"{this.DateTime} получено сообщение {this.Text}";
+            return $"{DateTime} получено сообщение {Text}";
         }
     }
 }

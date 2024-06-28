@@ -1,7 +1,8 @@
 ﻿// Класс для работы с сообщениями
 using Microsoft.EntityFrameworkCore;
+using Server.Models;
 
-namespace Server
+namespace Server.Services
 {
     public class MessageService
     {
@@ -19,10 +20,10 @@ namespace Server
         }
 
         public void PrintUnreadMessages()
-        { 
+        {
             List<Message> unreadMessages = GetUnreadMessages();
 
-            foreach (Message message in unreadMessages) 
+            foreach (Message message in unreadMessages)
             {
                 Console.WriteLine(message.ToString());
             }
@@ -48,7 +49,7 @@ namespace Server
                 }
                 catch (InvalidOperationException e)
                 {
-                    Console.WriteLine("Ошибка соединения с бд: "+e.Message);
+                    Console.WriteLine("Ошибка соединения с бд: " + e.Message);
                     throw;
                 }
                 catch (DbUpdateException e)
