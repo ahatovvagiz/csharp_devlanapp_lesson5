@@ -10,7 +10,7 @@ namespace Server.Abstract
 {
     internal interface IMessageSource
     {
-        void SendMessage(string message);
-        NetMessage Receive(IPEndPoint ep);
+        public void Send(NetMessage message, ref IPEndPoint ep);
+        public NetMessage Receive(ref IPEndPoint ep);
     }
 }

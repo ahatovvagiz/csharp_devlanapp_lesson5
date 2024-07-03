@@ -13,7 +13,7 @@ namespace Client
         {
             if (args.Length == 0)
             {
-                Client.SendMessage("client", "127.0.0.1");
+                Client.SendMessage("client", "tcp://127.0.0.1:5556");
             }
             else if (args.Length == 2)
             {

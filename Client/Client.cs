@@ -3,6 +3,8 @@ using System.Net;
 using System.Text;
 using Server.Services;
 using Server.Models;
+using NetMQ.Sockets;
+using NetMQ;
 
 namespace Client
 {
@@ -10,79 +12,88 @@ namespace Client
     {
         public static void SendMessage(string From, string ip)
         {
-            UdpClient udpClient = new UdpClient();
-            IPEndPoint ipEndPoint = new IPEndPoint(IPAddress.Parse(ip), 12345);
-
-            while (true)
+            using (var netMQClient = new RequestSocket())
             {
-                string messageText;
-                do
+                netMQClient.Connect(ip);
+
+                while (true)
                 {
-                    
-                    // Console.Clear();
-                    if (From == "TestUser")
+                    string messageText;
+                    do
                     {
-                        messageText = "Тест";
+
+                        // Console.Clear();
+                        if (From == "TestUser")
+                        {
+                            messageText = "Тест";
+                        }
+                        else
+                        {
+                           messageText = Console.ReadLine();
+                        }
+
+                        if (messageText.ToLower() == "exit")
+                        {
+                            Console.WriteLine("Завершение работы клиента.");
+
+                            netMQClient.Close();
+                            return;
+                        }
+                        else if (messageText.ToLower() == "get")
+                        {
+                            Console.WriteLine("Получение списка непрочитанных сообщений!");
+
+                            MessageService messageservice = new MessageService();
+
+                            messageservice.PrintUnreadMessages();
+
+                            netMQClient.Close();
+                            return;
+                        }
+                        else if (messageText.ToLower() == "pull")
+                        {
+                            Console.WriteLine("Запись данных в бд!");
+
+                            MessageService messageservice = new MessageService();
+
+                            messageservice.PullMessages();
+
+                            netMQClient.Close();
+                            return;
+                        }
+                        else if (messageText.ToLower() == "test")
+                        {
+                            Console.WriteLine("Запись данных в бд!");
+
+                            MessageService messageservice = new MessageService();
+
+                            messageservice.PullMessages();
+
+                            netMQClient.Close();
+                            return;
+                        }
                     }
-                    else
-                    {
-                        messageText = Console.ReadLine();
-                    }
+                    while (string.IsNullOrEmpty(messageText));
+                    NetMessage message = new NetMessage() { Text = messageText, DateTime = DateTime.Now, SenderFullName = From };
+                    string json = message.SerializeMessageToJson();
 
-                    if (messageText.ToLower() == "exit")
-                    {
-                        Console.WriteLine("Завершение работы клиента.");
+                    byte[] data = Encoding.UTF8.GetBytes(json);                                                  
+                    netMQClient.SendFrame(data);
 
-                        udpClient.Close();
-                        return;
-                    }
-                    else if (messageText.ToLower() == "get")
-                    {
-                        Console.WriteLine("Получение списка непрочитанных сообщений!");
+                    var msg = netMQClient.ReceiveFrameString(); 
 
-                        MessageService messageservice = new MessageService();
+                    // Получение подтверждения от сервера
 
-                        messageservice.PrintUnreadMessages();
+                    //byte[] receivedBytes = netMQClient.Receive(ref msg);
+                    //string confirmationMessage = Encoding.UTF8.GetString(receivedBytes);
+                    //Console.WriteLine($"Подтверждение от сервера: {confirmationMessage}");
 
-                        udpClient.Close();
-                        return;
-                    }
-                    else if (messageText.ToLower() == "pull")
-                    {
-                        Console.WriteLine("Запись данных в бд!");
-
-                        MessageService messageservice = new MessageService();
-
-                        messageservice.PullMessages();
-
-                        udpClient.Close();
-                        return;
-                    }
-                    else if (messageText.ToLower() == "test")
-                    {
-                        Console.WriteLine("Запись данных в бд!");
-
-                        MessageService messageservice = new MessageService();
-
-                        messageservice.PullMessages();
-
-                        udpClient.Close();
-                        return;
-                    }
                 }
-                while (string.IsNullOrEmpty(messageText));
-                NetMessage message = new NetMessage() { Text = messageText, DateTime = DateTime.Now, SenderFullName = From };
-                string json = message.SerializeMessageToJson();
-
-                byte[] data = Encoding.UTF8.GetBytes(json);
-                udpClient.Send(data, data.Length, ipEndPoint);
-
-                // Получение подтверждения от сервера
-                byte[] receivedBytes = udpClient.Receive(ref ipEndPoint);
-                string confirmationMessage = Encoding.UTF8.GetString(receivedBytes);
-                Console.WriteLine($"Подтверждение от сервера: {confirmationMessage}");
-                
             }
+            //UdpClient udpClient = new UdpClient();
+            //IPEndPoint ipEndPoint = new IPEndPoint(IPAddress.Parse(ip), 12345);
+
+            
 
         }
     }

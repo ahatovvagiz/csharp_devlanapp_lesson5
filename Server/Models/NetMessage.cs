@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 
 // Определение модели сообщения
-namespace Server
+namespace Server.Models
 {
     public enum Command
     {
@@ -33,7 +33,7 @@ namespace Server
         }
         public override string ToString()
         {
-            return $"{this.DateTime} получено сообщение {this.Text}  от  {this.SenderFullName}";
+            return $"{DateTime} получено сообщение {Text}  от  {SenderFullName}";
         }
 
     }
